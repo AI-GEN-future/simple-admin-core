@@ -2,7 +2,6 @@ name: CI
 
 on: [ push ]
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -41,10 +40,12 @@ jobs:
             echo "core_api file not found!"
             exit 1
           fi
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
       - name: Log in to Alibaba Cloud ACR
+        if: github.ref == 'refs/heads/master'
         env:
           ACR_REGISTRY: ${{ secrets.ACR_REGISTRY }}
           ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
@@ -52,19 +53,23 @@ jobs:
         run: echo $ACR_PASSWORD | docker login $ACR_REGISTRY -u $ACR_USERNAME --password-stdin
 
       - name: Build and push Docker image - API
+        if: github.ref == 'refs/heads/master'
         env:
           ACR_REGISTRY: ${{ secrets.ACR_REGISTRY }}
         run: |
           docker build -t $ACR_REGISTRY/dkzx_test/core-api-docker:latest -f Dockerfile-api .
           docker push $ACR_REGISTRY/dkzx_test/core-api-docker:latest
-      #          docker build -t $ACR_REGISTRY/dkzx_test/core-api-docker:${{ github.sha }} -f Dockerfile-api .
-      #          docker push $ACR_REGISTRY/dkzx_test/core-api-docker:${{ github.sha }}
+          # 可以启用版本tag推送
+          # docker build -t $ACR_REGISTRY/dkzx_test/core-api-docker:${{ github.sha }} -f Dockerfile-api .
+          # docker push $ACR_REGISTRY/dkzx_test/core-api-docker:${{ github.sha }}
 
       - name: Build and push Docker image - RPC
+        if: github.ref == 'refs/heads/master'
         env:
           ACR_REGISTRY: ${{ secrets.ACR_REGISTRY }}
         run: |
           docker build -t $ACR_REGISTRY/dkzx_test/core-rpc-docker:latest -f Dockerfile-rpc .
           docker push $ACR_REGISTRY/dkzx_test/core-rpc-docker:latest
-#          docker build -t $ACR_REGISTRY/dkzx_test/core-rpc-docker:${{ github.sha }} -f Dockerfile-rpc .
-#          docker push $ACR_REGISTRY/dkzx_test/core-rpc-docker:${{ github.sha }}
+          # 可以启用版本tag推送
+          # docker build -t $ACR_REGISTRY/dkzx_test/core-rpc-docker:${{ github.sha }} -f Dockerfile-rpc .
+          # docker push $ACR_REGISTRY/dkzx_test/core-rpc-docker:${{ github.sha }}
