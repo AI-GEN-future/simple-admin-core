@@ -36,7 +36,6 @@ import (
 var configFile = flag.String("f", "etc/core.yaml", "the config file")
 
 func main() {
-	//fmt.Println("test")
 	flag.Parse()
 
 	var c config.Config
