@@ -47,7 +47,6 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Log in to Alibaba Cloud ACR
-        if: github.ref == 'refs/heads/master'
         env:
           ACR_REGISTRY: ${{ secrets.ACR_REGISTRY }}
           ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
