@@ -98,7 +98,7 @@ type (
         Username  string `json:"username" validate:"required,alphanum,max=20"`
 
         // Password | 密码
-        Password  string `json:"password" validate:"required,max=30,min=6"`
+        Password  string `json:"password" validate:"required,min=6"`
 
         // Captcha ID which store in redis | 验证码编号, 存在redis中
         CaptchaId string `json:"captchaId" validate:"required,len=20"`
@@ -116,7 +116,7 @@ type (
         Username  string `json:"username" validate:"required,alphanum,max=20"`
 
         // Password | 密码
-        Password  string `json:"password" validate:"required,max=30,min=6"`
+        Password  string `json:"password" validate:"required,min=6"`
 
         // The Captcha which users input | 用户输入的验证码
         Captcha   string `json:"captcha" validate:"required,len=5"`
@@ -131,7 +131,7 @@ type (
         Username  string `json:"username" validate:"required,alphanum,max=20"`
 
         // Password | 密码
-        Password  string `json:"password" validate:"required,max=30,min=6"`
+        Password  string `json:"password" validate:"required,min=6"`
 
         // The Captcha which users input | 用户输入的验证码
         Captcha   string `json:"captcha" validate:"required,len=5"`
@@ -143,10 +143,10 @@ type (
     // change user's password request | 修改密码请求参数
     ChangePasswordReq {
         // User's old password | 用户旧密码
-        OldPassword string `json:"oldPassword" validate:"required,max=30"`
+        OldPassword string `json:"oldPassword" validate:"required"`
 
         // User's new password | 用户新密码
-        NewPassword string `json:"newPassword" validate:"required,max=30"`
+        NewPassword string `json:"newPassword" validate:"required"`
     }
 
     // The log in information | 登陆返回的数据信息
@@ -221,7 +221,7 @@ type (
         Username   string `json:"username" validate:"required,alphanum,max=20"`
 
         // Password | 密码
-        Password   string `json:"password" validate:"required,max=30,min=6"`
+        Password   string `json:"password" validate:"required,min=6"`
 
         // Captcha ID which store in redis | 验证码编号, 存在redis中
         CaptchaId  string `json:"captchaId"  validate:"required,len=20"`
