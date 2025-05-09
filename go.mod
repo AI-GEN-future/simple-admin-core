@@ -1,6 +1,8 @@
 module github.com/suyuan32/simple-admin-core
 
-go 1.22.5
+go 1.23.0
+
+toolchain go1.23.8
 
 require (
 	entgo.io/ent v0.13.1
@@ -10,12 +12,13 @@ require (
 	github.com/gofrs/uuid/v5 v5.2.0
 	github.com/larksuite/oapi-sdk-go/v3 v3.2.9
 	github.com/mojocn/base64Captcha v1.3.6
-	github.com/redis/go-redis/v9 v9.6.1
+	github.com/redis/go-redis/v9 v9.8.0
 	github.com/suyuan32/simple-admin-common v1.5.2
 	github.com/suyuan32/simple-admin-job v1.5.2
 	github.com/suyuan32/simple-admin-message-center v1.5.2
+	github.com/tjfoc/gmsm v1.4.1
 	github.com/zeromicro/go-zero v1.7.0
-	golang.org/x/oauth2 v0.21.0
+	golang.org/x/oauth2 v0.30.0
 	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.34.2
 )

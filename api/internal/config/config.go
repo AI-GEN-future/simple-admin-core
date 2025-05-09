@@ -11,17 +11,18 @@ import (
 
 type Config struct {
 	rest.RestConf
-	Auth         rest.AuthConf
-	RedisConf    config.RedisConf
-	CoreRpc      zrpc.RpcClientConf
-	JobRpc       zrpc.RpcClientConf
-	McmsRpc      zrpc.RpcClientConf
-	Captcha      captcha.Conf
-	DatabaseConf config.DatabaseConf
-	CasbinConf   casbin.CasbinConf
-	I18nConf     i18n.Conf
-	ProjectConf  ProjectConf
-	CROSConf     config.CROSConf
+	Auth          rest.AuthConf
+	RedisConf     config.RedisConf
+	CoreRpc       zrpc.RpcClientConf
+	JobRpc        zrpc.RpcClientConf
+	McmsRpc       zrpc.RpcClientConf
+	Captcha       captcha.Conf
+	DatabaseConf  config.DatabaseConf
+	CasbinConf    casbin.CasbinConf
+	I18nConf      i18n.Conf
+	ProjectConf   ProjectConf
+	CROSConf      config.CROSConf
+	Sm2PrivateKey string
 }
 
 type ProjectConf struct {

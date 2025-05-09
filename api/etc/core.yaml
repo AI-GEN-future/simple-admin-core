@@ -90,6 +90,8 @@ McmsRpc:
   Enabled: false
   Timeout: 5000
 
+Sm2PrivateKey:
+
 # Tracing Analysis
 
 #Telemetry:
