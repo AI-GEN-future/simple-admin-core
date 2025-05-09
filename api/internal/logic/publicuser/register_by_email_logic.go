@@ -40,11 +40,16 @@ func (l *RegisterByEmailLogic) RegisterByEmail(req *types.RegisterByEmailReq) (r
 		return nil, errorx.NewCodeInvalidArgumentError(i18n.Failed)
 	}
 
+	password, err := l.svcCtx.Sm2.Sm2Decrypt(req.Password)
+	if err != nil {
+		return nil, err
+	}
+
 	if captchaData == req.Captcha {
 		_, err := l.svcCtx.CoreRpc.CreateUser(l.ctx,
 			&core.UserInfo{
 				Username:     &req.Username,
-				Password:     &req.Password,
+				Password:     &password,
 				Email:        &req.Email,
 				Nickname:     &req.Username,
 				Status:       pointy.GetPointer(uint32(1)),

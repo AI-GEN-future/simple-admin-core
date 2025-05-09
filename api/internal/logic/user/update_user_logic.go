@@ -25,12 +25,16 @@ func NewUpdateUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Update
 }
 
 func (l *UpdateUserLogic) UpdateUser(req *types.UserInfo) (resp *types.BaseMsgResp, err error) {
+	password, err := l.svcCtx.Sm2.Sm2Decrypt(*req.Password)
+	if err != nil {
+		return nil, err
+	}
 	data, err := l.svcCtx.CoreRpc.UpdateUser(l.ctx,
 		&core.UserInfo{
 			Id:           req.Id,
 			Status:       req.Status,
 			Username:     req.Username,
-			Password:     req.Password,
+			Password:     &password,
 			Nickname:     req.Nickname,
 			Description:  req.Description,
 			HomePath:     req.HomePath,
