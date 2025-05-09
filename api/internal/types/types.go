@@ -260,9 +260,8 @@ type RegisterReq struct {
 	Username string `json:"username" validate:"required,alphanum,max=20"`
 	// Password | 密码
 	// required : true
-	// max length : 30
 	// min length : 6
-	Password string `json:"password" validate:"required,max=30,min=6"`
+	Password string `json:"password" validate:"required,min=6"`
 	// Captcha ID which store in redis | 验证码编号, 存在redis中
 	// required : true
 	// max length : 20
@@ -288,9 +287,8 @@ type RegisterByEmailReq struct {
 	Username string `json:"username" validate:"required,alphanum,max=20"`
 	// Password | 密码
 	// required : true
-	// max length : 30
 	// min length : 6
-	Password string `json:"password" validate:"required,max=30,min=6"`
+	Password string `json:"password" validate:"required,min=6"`
 	// The Captcha which users input | 用户输入的验证码
 	// required : true
 	// max length : 5
@@ -311,9 +309,8 @@ type RegisterBySmsReq struct {
 	Username string `json:"username" validate:"required,alphanum,max=20"`
 	// Password | 密码
 	// required : true
-	// max length : 30
 	// min length : 6
-	Password string `json:"password" validate:"required,max=30,min=6"`
+	Password string `json:"password" validate:"required,min=6"`
 	// The Captcha which users input | 用户输入的验证码
 	// required : true
 	// max length : 5
@@ -330,12 +327,10 @@ type RegisterBySmsReq struct {
 type ChangePasswordReq struct {
 	// User's old password | 用户旧密码
 	// required : true
-	// max length : 30
-	OldPassword string `json:"oldPassword" validate:"required,max=30"`
+	OldPassword string `json:"oldPassword" validate:"required"`
 	// User's new password | 用户新密码
 	// required : true
-	// max length : 30
-	NewPassword string `json:"newPassword" validate:"required,max=30"`
+	NewPassword string `json:"newPassword" validate:"required"`
 }
 
 // The log in information | 登陆返回的数据信息
@@ -404,9 +399,8 @@ type LoginReq struct {
 	Username string `json:"username" validate:"required,alphanum,max=20"`
 	// Password | 密码
 	// required : true
-	// max length : 30
 	// min length : 6
-	Password string `json:"password" validate:"required,max=30,min=6"`
+	Password string `json:"password" validate:"required,min=6"`
 	// Captcha ID which store in redis | 验证码编号, 存在redis中
 	// required : true
 	// max length : 20
