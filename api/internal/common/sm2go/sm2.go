@@ -3,6 +3,7 @@ package sm2go
 import (
 	"context"
 	"crypto/rand"
+	"encoding/hex"
 	"github.com/tjfoc/gmsm/sm2"
 	"github.com/tjfoc/gmsm/x509"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -36,7 +37,12 @@ func (s *Sm2Go) Sm2Encrypt(data string) (string, error) {
 }
 
 func (s *Sm2Go) Sm2Decrypt(ciphertext string) (string, error) {
-	decrypted, err := sm2.Decrypt(s.privateKey, []byte(ciphertext), sm2.C1C3C2) // 解密
+	decodeString, err := hex.DecodeString(ciphertext)
+	if err != nil {
+		s.logger.Errorf("解密失败: %v\n", err)
+		return "", err
+	}
+	decrypted, err := sm2.Decrypt(s.privateKey, decodeString, sm2.C1C3C2) // 解密
 	if err != nil {
 		s.logger.Errorf("解密失败: %v\n", err)
 		return "", err
