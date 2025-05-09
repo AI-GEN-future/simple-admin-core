@@ -5,6 +5,7 @@ import (
 	"github.com/redis/go-redis/v9"
 	"github.com/suyuan32/simple-admin-common/i18n"
 	"github.com/suyuan32/simple-admin-common/utils/captcha"
+	"github.com/suyuan32/simple-admin-core/api/internal/common/sm2go"
 	"github.com/suyuan32/simple-admin-core/api/internal/config"
 	i18n2 "github.com/suyuan32/simple-admin-core/api/internal/i18n"
 	"github.com/suyuan32/simple-admin-core/api/internal/middleware"
@@ -27,6 +28,7 @@ type ServiceContext struct {
 	Casbin    *casbin.Enforcer
 	Trans     *i18n.Translator
 	Captcha   *base64Captcha.Captcha
+	Sm2       *sm2go.Sm2Go
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -36,6 +38,10 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		c.RedisConf)
 
 	trans := i18n.NewTranslator(c.I18nConf, i18n2.LocaleFS)
+	sm2Go, err := sm2go.NewSm2Go(c.Sm2PrivateKey)
+	if err != nil {
+		panic(err)
+	}
 
 	return &ServiceContext{
 		Config:    c,
@@ -47,5 +53,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Casbin:    cbn,
 		Trans:     trans,
 		Authority: middleware.NewAuthorityMiddleware(cbn, rds, trans).Handle,
+		Sm2:       sm2Go,
 	}
 }

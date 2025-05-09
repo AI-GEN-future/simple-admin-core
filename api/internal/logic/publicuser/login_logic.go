@@ -52,7 +52,12 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 			return nil, errorx.NewCodeInvalidArgumentError("login.userBanned")
 		}
 
-		if !encrypt.BcryptCheck(req.Password, *user.Password) {
+		password, err := l.svcCtx.Sm2.Sm2Decrypt(req.Password)
+		if err != nil {
+			return nil, err
+		}
+
+		if !encrypt.BcryptCheck(password, *user.Password) {
 			return nil, errorx.NewCodeInvalidArgumentError("login.wrongUsernameOrPassword")
 		}
 		// 获取 position id
