@@ -40,11 +40,16 @@ func (l *RegisterBySmsLogic) RegisterBySms(req *types.RegisterBySmsReq) (resp *t
 		return nil, errorx.NewCodeInvalidArgumentError(i18n.Failed)
 	}
 
+	password, err := l.svcCtx.Sm2.Sm2Decrypt(req.Password)
+	if err != nil {
+		return nil, err
+	}
+
 	if captchaData == req.Captcha {
 		_, err := l.svcCtx.CoreRpc.CreateUser(l.ctx,
 			&core.UserInfo{
 				Username:     &req.Username,
-				Password:     &req.Password,
+				Password:     &password,
 				Mobile:       &req.PhoneNumber,
 				Nickname:     &req.Username,
 				Status:       pointy.GetPointer(uint32(1)),

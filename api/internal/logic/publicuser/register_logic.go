@@ -33,11 +33,16 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.BaseMsgRes
 		return nil, errorx.NewCodeAbortedError("login.registerTypeForbidden")
 	}
 
+	password, err := l.svcCtx.Sm2.Sm2Decrypt(req.Password)
+	if err != nil {
+		return nil, err
+	}
+
 	if ok := l.svcCtx.Captcha.Verify(config.RedisCaptchaPrefix+req.CaptchaId, req.Captcha, true); ok {
 		_, err := l.svcCtx.CoreRpc.CreateUser(l.ctx,
 			&core.UserInfo{
 				Username:     &req.Username,
-				Password:     &req.Password,
+				Password:     &password,
 				Email:        &req.Email,
 				Nickname:     &req.Username,
 				Status:       pointy.GetPointer(uint32(1)),

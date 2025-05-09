@@ -52,7 +52,12 @@ func (l *ResetPasswordByEmailLogic) ResetPasswordByEmail(req *types.ResetPasswor
 			return nil, errorx.NewCodeInvalidArgumentError("login.userNotExist")
 		}
 
-		result, err := l.svcCtx.CoreRpc.UpdateUser(l.ctx, &core.UserInfo{Id: userData.Data[0].Id, Password: &req.Password})
+		password, err := l.svcCtx.Sm2.Sm2Decrypt(req.Password)
+		if err != nil {
+			return nil, err
+		}
+
+		result, err := l.svcCtx.CoreRpc.UpdateUser(l.ctx, &core.UserInfo{Id: userData.Data[0].Id, Password: &password})
 		if err != nil {
 			return nil, err
 		}
