@@ -31,9 +31,11 @@ func (l *CreateEmailProviderLogic) CreateEmailProvider(req *types.EmailProviderI
 		return nil, errorx.NewCodeUnavailableError(i18n.ServiceUnavailable)
 	}
 
-	password, err := l.svcCtx.Sm2.Sm2Decrypt(*req.Password)
-	if err != nil {
-		return nil, err
+	if req.Password != nil {
+		*req.Password, err = l.svcCtx.Sm2.Sm2Decrypt(*req.Password)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	data, err := l.svcCtx.McmsRpc.CreateEmailProvider(l.ctx,
@@ -41,7 +43,7 @@ func (l *CreateEmailProviderLogic) CreateEmailProvider(req *types.EmailProviderI
 			Name:      req.Name,
 			AuthType:  req.AuthType,
 			EmailAddr: req.EmailAddr,
-			Password:  &password,
+			Password:  req.Password,
 			HostName:  req.HostName,
 			Identify:  req.Identify,
 			Secret:    req.Secret,
