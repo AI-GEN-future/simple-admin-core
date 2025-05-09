@@ -33,7 +33,7 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.BaseMsgRes
 		return nil, errorx.NewCodeAbortedError("login.registerTypeForbidden")
 	}
 
-	password, err := l.svcCtx.Sm2.Sm2Decrypt(req.Password)
+	req.Password, err = l.svcCtx.Sm2.Sm2Decrypt(req.Password)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.BaseMsgRes
 		_, err := l.svcCtx.CoreRpc.CreateUser(l.ctx,
 			&core.UserInfo{
 				Username:     &req.Username,
-				Password:     &password,
+				Password:     &req.Password,
 				Email:        &req.Email,
 				Nickname:     &req.Username,
 				Status:       pointy.GetPointer(uint32(1)),

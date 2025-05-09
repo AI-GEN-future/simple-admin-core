@@ -25,15 +25,17 @@ func NewCreateUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreateUserLogic) CreateUser(req *types.UserInfo) (resp *types.BaseMsgResp, err error) {
-	password, err := l.svcCtx.Sm2.Sm2Decrypt(*req.Password)
-	if err != nil {
-		return nil, err
+	if req.Password != nil {
+		*req.Password, err = l.svcCtx.Sm2.Sm2Decrypt(*req.Password)
+		if err != nil {
+			return nil, err
+		}
 	}
 	data, err := l.svcCtx.CoreRpc.CreateUser(l.ctx,
 		&core.UserInfo{
 			Status:       req.Status,
 			Username:     req.Username,
-			Password:     &password,
+			Password:     req.Password,
 			Nickname:     req.Nickname,
 			Description:  req.Description,
 			HomePath:     req.HomePath,
