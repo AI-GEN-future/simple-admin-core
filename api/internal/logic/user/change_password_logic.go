@@ -34,15 +34,19 @@ func (l *ChangePasswordLogic) ChangePassword(req *types.ChangePasswordReq) (resp
 		return nil, err
 	}
 
-	password, err := l.svcCtx.Sm2.Sm2Decrypt(req.OldPassword)
+	oldPassword, err := l.svcCtx.Sm2.Sm2Decrypt(req.OldPassword)
+	if err != nil {
+		return nil, err
+	}
+	newPassword, err := l.svcCtx.Sm2.Sm2Decrypt(req.NewPassword)
 	if err != nil {
 		return nil, err
 	}
 
-	if encrypt.BcryptCheck(password, *userData.Password) {
+	if encrypt.BcryptCheck(oldPassword, *userData.Password) {
 		result, err := l.svcCtx.CoreRpc.UpdateUser(l.ctx, &core.UserInfo{
 			Id:       pointy.GetPointer(l.ctx.Value("userId").(string)),
-			Password: pointy.GetPointer(req.NewPassword),
+			Password: pointy.GetPointer(newPassword),
 		})
 		if err != nil {
 			return nil, err
