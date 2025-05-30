@@ -415,7 +415,7 @@ service Core {
 
     // Refresh token | 获取刷新 token
     @handler refreshToken
-    get /user/refresh_token (RefreshTokenReq) returns (RefreshTokenResp)
+    post /user/refresh_token (RefreshTokenReq) returns (RefreshTokenResp)
 
     // Access token | 获取短期 token
     @handler accessToken
