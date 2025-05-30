@@ -3022,6 +3022,16 @@
         ],
         "summary": "Refresh token | 获取刷新 token",
         "operationId": "RefreshToken",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/RefreshTokenReq"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "RefreshTokenResp",
@@ -5955,6 +5965,20 @@
         "token": {
           "type": "string",
           "x-go-name": "Token"
+        }
+      },
+      "x-go-package": "github.com/suyuan32/simple-admin-core/api/internal/types"
+    },
+    "RefreshTokenReq": {
+      "description": "Refresh token req data | 刷新令牌请求数据",
+      "type": "object",
+      "properties": {
+        "regionId": {
+          "description": "The Region which users select | 用户选中的区域",
+          "type": "integer",
+          "format": "int64",
+          "minimum": 0,
+          "x-go-name": "RegionId"
         }
       },
       "x-go-package": "github.com/suyuan32/simple-admin-core/api/internal/types"

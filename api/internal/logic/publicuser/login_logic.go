@@ -75,11 +75,13 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 		// 使用 strings.Join 将字符串切片转换为逗号隔开的字符串
 		positionIds := strings.Join(stringSlice, ",")
 
-		//fmt.Println(userData.Data[0].PositionIds)
-		token, err := jwt.NewJwtToken(l.svcCtx.Config.Auth.AccessSecret, time.Now().Unix(),
-			l.svcCtx.Config.Auth.AccessExpire, jwt.WithOption("userId", user.Id), jwt.WithOption("roleId",
-				strings.Join(user.RoleCodes, ",")), jwt.WithOption("deptId", user.DepartmentId),
-			jwt.WithOption("regionId", req.RegionId), jwt.WithOption("positionIds", positionIds))
+		token, err := jwt.NewJwtToken(
+			l.svcCtx.Config.Auth.AccessSecret, time.Now().Unix(),
+			l.svcCtx.Config.Auth.AccessExpire, jwt.WithOption("userId", user.Id),
+			jwt.WithOption("roleId", strings.Join(user.RoleCodes, ",")),
+			jwt.WithOption("deptId", user.DepartmentId),
+			jwt.WithOption("regionId", req.RegionId),
+			jwt.WithOption("positionIds", positionIds))
 		if err != nil {
 			return nil, err
 		}
