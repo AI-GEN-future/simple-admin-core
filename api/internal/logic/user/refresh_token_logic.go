@@ -10,6 +10,7 @@ import (
 	"github.com/suyuan32/simple-admin-common/utils/pointy"
 	"github.com/suyuan32/simple-admin-core/rpc/types/core"
 	"github.com/zeromicro/go-zero/core/errorx"
+	"strconv"
 	"strings"
 	"time"
 
@@ -53,11 +54,19 @@ func (l *RefreshTokenLogic) RefreshToken(req *types.RefreshTokenReq) (resp *type
 		return nil, errorx.NewApiUnauthorizedError(i18n.Failed)
 	}
 
+	// 将整数切片转换为字符串切片
+	var stringSlice []string
+	for _, num := range userData.PositionIds {
+		stringSlice = append(stringSlice, strconv.Itoa(int(num)))
+	}
+	// 使用 strings.Join 将字符串切片转换为逗号隔开的字符串
+	positionIds := strings.Join(stringSlice, ",")
+
 	token, err := jwt.NewJwtToken(l.svcCtx.Config.Auth.AccessSecret, time.Now().Unix(),
 		l.svcCtx.Config.Auth.AccessExpire, jwt.WithOption("userId", userId),
 		jwt.WithOption("roleId", strings.Join(roleIds, ",")),
 		jwt.WithOption("deptId", userData.DepartmentId),
-		jwt.WithOption("positionIds", userData.PositionIds),
+		jwt.WithOption("positionIds", positionIds),
 		jwt.WithOption("regionId", req.RegionId),
 	)
 	if err != nil {
