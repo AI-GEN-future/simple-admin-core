@@ -2,6 +2,7 @@ package authority
 
 import (
 	"context"
+	"github.com/suyuan32/simple-admin-core/api/internal/logic/common"
 	"github.com/zeromicro/go-zero/core/errorx"
 
 	"github.com/suyuan32/simple-admin-common/i18n"
@@ -61,6 +62,8 @@ func (l *CreateOrUpdateApiAuthorityLogic) CreateOrUpdateApiAuthority(req *types.
 		return nil, errorx.NewInvalidArgumentError("casbin.addFailed")
 	}
 	if addResult {
+		// 重新加载 casbin
+		common.NewPubRedisLogic(l.ctx, l.svcCtx).NotifyReloadCasbin()
 		return &types.BaseMsgResp{Msg: l.svcCtx.Trans.Trans(l.ctx, i18n.UpdateSuccess)}, nil
 	} else {
 		return &types.BaseMsgResp{Msg: l.svcCtx.Trans.Trans(l.ctx, i18n.UpdateFailed)}, nil

@@ -497,6 +497,14 @@ type ResetPasswordBySmsReq struct {
 	Password    string `json:"password"`
 }
 
+// Refresh token req data | 刷新令牌请求数据
+// swagger:model RefreshTokenReq
+type RefreshTokenReq struct {
+	// The Region which users select | 用户选中的区域
+	// min : 0
+	RegionId int64 `json:"regionId" validate:"gte=0"`
+}
+
 // Refresh token response data | 刷新令牌响应数据
 // swagger:model RefreshTokenResp
 type RefreshTokenResp struct {

@@ -32,7 +32,7 @@ func NewRefreshTokenLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Refr
 		svcCtx: svcCtx}
 }
 
-func (l *RefreshTokenLogic) RefreshToken() (resp *types.RefreshTokenResp, err error) {
+func (l *RefreshTokenLogic) RefreshToken(req *types.RefreshTokenReq) (resp *types.RefreshTokenResp, err error) {
 	userId, err := userctx.GetUserIDFromCtx(l.ctx)
 	if err != nil {
 		return nil, err
@@ -54,8 +54,12 @@ func (l *RefreshTokenLogic) RefreshToken() (resp *types.RefreshTokenResp, err er
 	}
 
 	token, err := jwt.NewJwtToken(l.svcCtx.Config.Auth.AccessSecret, time.Now().Unix(),
-		int64(l.svcCtx.Config.ProjectConf.RefreshTokenPeriod)*60*60, jwt.WithOption("userId", userId), jwt.WithOption("roleId",
-			strings.Join(roleIds, ",")), jwt.WithOption("deptId", userData.DepartmentId), jwt.WithOption("positionIds", userData.PositionIds))
+		l.svcCtx.Config.Auth.AccessExpire, jwt.WithOption("userId", userId),
+		jwt.WithOption("roleId", strings.Join(roleIds, ",")),
+		jwt.WithOption("deptId", userData.DepartmentId),
+		jwt.WithOption("positionIds", userData.PositionIds),
+		jwt.WithOption("regionId", req.RegionId),
+	)
 	if err != nil {
 		return nil, err
 	}
