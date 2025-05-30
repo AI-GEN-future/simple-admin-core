@@ -31,7 +31,7 @@ func NewGetUserByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUs
 }
 
 func (l *GetUserByIdLogic) GetUserById(in *core.UUIDReq) (*core.UserInfo, error) {
-	result, err := l.svcCtx.DB.User.Query().Where(user.IDEQ(uuidx.ParseUUIDString(in.Id))).WithRoles().WithDepartments().First(l.ctx)
+	result, err := l.svcCtx.DB.User.Query().Where(user.IDEQ(uuidx.ParseUUIDString(in.Id))).WithRoles().WithPositions().WithDepartments().First(l.ctx)
 	if err != nil {
 		return nil, dberrorhandler.DefaultEntError(l.Logger, err, in)
 	}
@@ -41,6 +41,7 @@ func (l *GetUserByIdLogic) GetUserById(in *core.UUIDReq) (*core.UserInfo, error)
 		Avatar:         &result.Avatar,
 		RoleIds:        GetRoleIds(result.Edges.Roles),
 		RoleName:       GetRoleNames(result.Edges.Roles),
+		PositionIds:    GetPositionIds(result.Edges.Positions),
 		Mobile:         &result.Mobile,
 		Email:          &result.Email,
 		Status:         pointy.GetPointer(uint32(result.Status)),
