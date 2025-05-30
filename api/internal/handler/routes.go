@@ -194,7 +194,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Handler: user.LogoutHandler(serverCtx),
 				},
 				{
-					Method:  http.MethodGet,
+					Method:  http.MethodPost,
 					Path:    "/user/refresh_token",
 					Handler: user.RefreshTokenHandler(serverCtx),
 				},
