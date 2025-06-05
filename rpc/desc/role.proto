@@ -26,11 +26,11 @@ message RoleListReq {
   optional string code = 4;
   optional string default_router = 5;
   optional string remark = 6;
+  optional IDsReq role_ids = 7;
 }
 
 
 service Core {
-
   // Role management
   // group: role
   rpc createRole (RoleInfo) returns (BaseIDResp);
@@ -42,6 +42,4 @@ service Core {
   rpc getRoleById (IDReq) returns (RoleInfo);
   // group: role
   rpc deleteRole (IDsReq) returns (BaseResp);
-
-
 }

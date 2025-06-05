@@ -31,7 +31,7 @@ func NewGetRoleListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetRo
 }
 
 func (l *GetRoleListLogic) GetRoleList(in *core.RoleListReq) (*core.RoleListResp, error) {
-	var predicates []predicate.Role
+	predicates := make([]predicate.Role, 0, 5)
 	if in.Name != nil {
 		predicates = append(predicates, role.NameContains(*in.Name))
 	}
@@ -44,6 +44,10 @@ func (l *GetRoleListLogic) GetRoleList(in *core.RoleListReq) (*core.RoleListResp
 	if in.Remark != nil {
 		predicates = append(predicates, role.RemarkEQ(*in.Remark))
 	}
+	if in.RoleIds != nil && len(in.RoleIds.Ids) != 0 {
+		predicates = append(predicates, role.IDIn(in.RoleIds.Ids...))
+	}
+
 	result, err := l.svcCtx.DB.Role.Query().Where(predicates...).Page(l.ctx, in.Page, in.PageSize, func(pager *ent.RolePager) {
 		pager.Order = ent.Asc(role.FieldSort)
 	})

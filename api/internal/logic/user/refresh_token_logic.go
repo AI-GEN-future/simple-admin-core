@@ -38,7 +38,7 @@ func (l *RefreshTokenLogic) RefreshToken(req *types.RefreshTokenReq) (resp *type
 	if err != nil {
 		return nil, err
 	}
-	roleIds, err := rolectx.GetRoleIDFromCtx(l.ctx)
+	roleCodes, err := rolectx.GetRoleIDFromCtx(l.ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -55,19 +55,42 @@ func (l *RefreshTokenLogic) RefreshToken(req *types.RefreshTokenReq) (resp *type
 	}
 
 	// 将整数切片转换为字符串切片
-	var stringSlice []string
+	positionIdsSlice := make([]string, 0, len(userData.PositionIds))
 	for _, num := range userData.PositionIds {
-		stringSlice = append(stringSlice, strconv.Itoa(int(num)))
+		positionIdsSlice = append(positionIdsSlice, strconv.Itoa(int(num)))
 	}
-	// 使用 strings.Join 将字符串切片转换为逗号隔开的字符串
-	positionIds := strings.Join(stringSlice, ",")
+	positionIds := strings.Join(positionIdsSlice, ",")
+
+	roleListByUser, err := l.svcCtx.CoreRpc.GetRoleList(l.ctx, &core.RoleListReq{
+		RoleIds: &core.IDsReq{
+			Ids: userData.RoleIds,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	remarksMap := make(map[string]struct{})
+	for _, v := range roleListByUser.Data {
+		remarksMap[v.GetRemark()] = struct{}{}
+	}
+
+	// 拼接有权限的区域id
+	var regionIdsStr string
+	for k := range remarksMap {
+		if regionIdsStr != "" {
+			regionIdsStr += ","
+		}
+		regionIdsStr += k
+	}
 
 	token, err := jwt.NewJwtToken(l.svcCtx.Config.Auth.AccessSecret, time.Now().Unix(),
 		l.svcCtx.Config.Auth.AccessExpire, jwt.WithOption("userId", userId),
-		jwt.WithOption("roleId", strings.Join(roleIds, ",")),
+		jwt.WithOption("roleId", strings.Join(roleCodes, ",")),
 		jwt.WithOption("deptId", userData.DepartmentId),
 		jwt.WithOption("positionIds", positionIds),
 		jwt.WithOption("regionId", req.RegionId),
+		jwt.WithOption("permissionRegionIds", regionIdsStr),
 	)
 	if err != nil {
 		return nil, err

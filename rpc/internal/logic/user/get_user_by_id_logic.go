@@ -31,7 +31,10 @@ func NewGetUserByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUs
 }
 
 func (l *GetUserByIdLogic) GetUserById(in *core.UUIDReq) (*core.UserInfo, error) {
-	result, err := l.svcCtx.DB.User.Query().Where(user.IDEQ(uuidx.ParseUUIDString(in.Id))).WithRoles().WithPositions().WithDepartments().First(l.ctx)
+	result, err := l.svcCtx.DB.User.Query().
+		Where(user.IDEQ(uuidx.ParseUUIDString(in.Id))).
+		WithRoles().WithPositions().WithDepartments().
+		First(l.ctx)
 	if err != nil {
 		return nil, dberrorhandler.DefaultEntError(l.Logger, err, in)
 	}
@@ -41,6 +44,7 @@ func (l *GetUserByIdLogic) GetUserById(in *core.UUIDReq) (*core.UserInfo, error)
 		Avatar:         &result.Avatar,
 		RoleIds:        GetRoleIds(result.Edges.Roles),
 		RoleName:       GetRoleNames(result.Edges.Roles),
+		RoleCodes:      GetRoleCodes(result.Edges.Roles),
 		PositionIds:    GetPositionIds(result.Edges.Positions),
 		Mobile:         &result.Mobile,
 		Email:          &result.Email,
@@ -58,7 +62,7 @@ func (l *GetUserByIdLogic) GetUserById(in *core.UUIDReq) (*core.UserInfo, error)
 }
 
 func GetRoleIds(data []*ent.Role) []uint64 {
-	var ids []uint64
+	ids := make([]uint64, 0, len(data))
 	for _, v := range data {
 		ids = append(ids, v.ID)
 	}
@@ -66,7 +70,7 @@ func GetRoleIds(data []*ent.Role) []uint64 {
 }
 
 func GetRoleNames(data []*ent.Role) []string {
-	var codes []string
+	codes := make([]string, 0, len(data))
 	for _, v := range data {
 		codes = append(codes, v.Name)
 	}
@@ -74,7 +78,7 @@ func GetRoleNames(data []*ent.Role) []string {
 }
 
 func GetRoleCodes(data []*ent.Role) []string {
-	var codes []string
+	codes := make([]string, 0, len(data))
 	for _, v := range data {
 		codes = append(codes, v.Code)
 	}
@@ -82,7 +86,7 @@ func GetRoleCodes(data []*ent.Role) []string {
 }
 
 func GetPositionIds(data []*ent.Position) []uint64 {
-	var ids []uint64
+	ids := make([]uint64, 0, len(data))
 	for _, v := range data {
 		ids = append(ids, v.ID)
 	}
