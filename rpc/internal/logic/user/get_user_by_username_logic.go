@@ -3,8 +3,6 @@ package user
 import (
 	"context"
 	"github.com/suyuan32/simple-admin-common/utils/pointy"
-	"github.com/suyuan32/simple-admin-common/utils/uuidx"
-
 	"github.com/suyuan32/simple-admin-core/rpc/ent/user"
 
 	"github.com/suyuan32/simple-admin-core/rpc/internal/svc"
@@ -30,7 +28,7 @@ func NewGetUserByUsernameLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 
 func (l *GetUserByUsernameLogic) GetUserByUsername(in *core.UsernameReq) (*core.UserInfo, error) {
 	result, err := l.svcCtx.DB.User.Query().
-		Where(user.IDEQ(uuidx.ParseUUIDString(in.GetUsername()))).
+		Where(user.UsernameEQ(in.GetUsername())).
 		WithRoles().WithPositions().WithDepartments().
 		First(l.ctx)
 	if err != nil {
