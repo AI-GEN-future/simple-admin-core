@@ -96,12 +96,14 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 
 	token, err := jwt.NewJwtToken(
 		l.svcCtx.Config.Auth.AccessSecret, time.Now().Unix(),
-		l.svcCtx.Config.Auth.AccessExpire, jwt.WithOption("userId", user.Id),
+		l.svcCtx.Config.Auth.AccessExpire,
+		jwt.WithOption("userId", user.Id),
 		jwt.WithOption("roleId", strings.Join(user.RoleCodes, ",")),
 		jwt.WithOption("deptId", user.DepartmentId),
 		jwt.WithOption("regionId", req.RegionId),
 		jwt.WithOption("positionIds", positionIds),
-		jwt.WithOption("permissionRegionIds", regionIdsStr))
+		jwt.WithOption("permissionRegionIds", regionIdsStr),
+	)
 	if err != nil {
 		return nil, err
 	}
